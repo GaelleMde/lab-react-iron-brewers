@@ -1,4 +1,5 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 function AddBeerPage() {
   // State variables to store the values of the form inputs. You can leave these as they are.
@@ -21,20 +22,40 @@ function AddBeerPage() {
   const handleAttenuationLevel = (e) => setAttenuationLevel(e.target.value);
   const handleContributedBy = (e) => setContributedBy(e.target.value);
 
-
-
   // TASK:
   // 1. Create a function to handle the form submission and send the form data to the Beers API to create a new beer.
   // 2. Use axios to make a POST request to the Beers API.
   // 3. Once the beer is created, navigate the user to the page showing the list of all beers.
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
+    const newBeer = {
+      name,
+      tagline,
+      description,
+      image_url: imageUrl,
+      first_brewed: firstBrewed,
+      brewers_tips: brewersTips,
+      attenuation_level: Number(attenuationLevel),
+      contributed_by: contributedBy,
+    };
+
+    axios
+      .post(`${import.meta.env.VITE_SERVER_URL}/beers/new`, newBeer)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   // Structure and the content of the page showing the form for adding a new beer. You can leave this as it is.
   return (
     <>
       <div className="d-inline-flex flex-column w-100 p-4">
-        <form>
+        <form onSubmit={handleSubmit}>
           <label>Name</label>
           <input
             className="form-control mb-4"
@@ -42,7 +63,7 @@ function AddBeerPage() {
             name="name"
             placeholder="Beer Name"
             value={name}
-            onChange={handleName}
+            onChange={(e) => setName(e.target.value)}
           />
           <label>Tagline</label>
           <input
@@ -51,7 +72,7 @@ function AddBeerPage() {
             name="tagline"
             placeholder="Beer Tagline"
             value={tagline}
-            onChange={handleTagline}
+            onChange={(e) => setTagline(e.target.value)}
           />
 
           <label className="form-label">Description</label>
@@ -62,7 +83,7 @@ function AddBeerPage() {
             placeholder="Description"
             rows="3"
             value={description}
-            onChange={handleDescription}
+            onChange={(e) => setDescription(e.target.value)}
           ></textarea>
 
           <label>Image</label>
@@ -72,7 +93,7 @@ function AddBeerPage() {
             name="imageUrl"
             placeholder="Image URL"
             value={imageUrl}
-            onChange={handleImageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
           />
 
           <label>First Brewed</label>
@@ -82,7 +103,7 @@ function AddBeerPage() {
             name="firstBrewed"
             placeholder="Date - MM/YYYY"
             value={firstBrewed}
-            onChange={handleFirstBrewed}
+            onChange={(e) => setFirstBrewed(e.target.value)}
           />
 
           <label>Brewer Tips</label>
@@ -92,7 +113,7 @@ function AddBeerPage() {
             name="brewersTips"
             placeholder="..."
             value={brewersTips}
-            onChange={handleBrewersTips}
+            onChange={(e) => setBrewersTips(e.target.value)}
           />
 
           <label>Attenuation Level</label>
@@ -107,7 +128,7 @@ function AddBeerPage() {
               type="number"
               name="attenuationLevel"
               value={attenuationLevel}
-              onChange={handleAttenuationLevel}
+              onChange={(e) => setAttenuationLevel(e.target.value)}
               min={0}
               max={100}
             />
@@ -120,7 +141,7 @@ function AddBeerPage() {
             name="contributedBy"
             placeholder="Contributed by"
             value={contributedBy}
-            onChange={handleContributedBy}
+            onChange={(e) => setContributedBy(e.target.value)}
           />
           <button className="btn btn-primary btn-round">Add Beer</button>
         </form>
